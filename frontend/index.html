@@ -3,18 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Medicine Tracker</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="disclaimer" id="disclaimer">
         Disclaimer: All medicine names and prices used in this application are fictional and do not represent any real medicine(s).
     </div>
+
     <header>
         <h1>Medicine Tracker</h1>
+        <p class="subtitle">View, Analyze and add medicines from the backend database.</p>
     </header>
-    <main>
 
+    <main>
+        <div class="container">
+            <section class="card">
+                <h2>Overview</h2>
+                <p id="status" class="status"></p>
+            </section>
+            <section class="card">
+                <div class="card-header">
+                    <h2>Medicines</h2>
+                    <span class="card-hint">Data fetched from the FastAPI backend</span>
+                </div>
+
+                <div id="empty-state" class="empty-state">
+                    No medicines available to display.
+                </div>
+
+                <div class="table-wrapper">
+                    <table id="medicines-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Name</th>
+                                <th>Price</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                         
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Add a New Medicine</h2>
+                <p class="card-hint">
+                    This form sends data to the <code>/create</code> endpoint using form data, not JSON.
+                </p>
+
+                <form id="create-medicine-form" novalidate>
+                    <div class="form-row">
+                        <label for="med-name">Name</label>
+                        <input
+                            type="text"
+                            id="med-name"
+                            name="name"
+                            placeholder="e.g. Novidat"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-row">
+                        <label for="med-price">Price (£)</label>
+                        <input
+                            type="number"
+                            id="med-price"
+                            name="price"
+                            step="0.01"
+                            min="0"
+                            placeholder="e.g. 9.99"
+                            required
+                        >
+                    </div>
+
+                    <button type="submit" class="btn">Add Medicine</button>
+
+                    <p id="form-message" class="form-message"></p>
+                </form>
+            </section>
+        </div>
     </main>
     <script src="script.js"></script>
 </body>

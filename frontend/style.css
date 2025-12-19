@@ -12,6 +12,20 @@ body {
     padding-top: 30px;
 }
 
+.btn-small {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
+    margin-right: 0.3rem;
+}
+
+.btn-danger {
+    background-color: #b22222;
+}
+
+.btn-danger:hover {
+    background-color: #8b1a1a;
+}
+
 
 .disclaimer {
     position: fixed;
@@ -26,7 +40,7 @@ body {
     height: 30px;
 }
 
-/* ---- Your custom styles below ---- */
+
 
 header {
     background-color: #ffffff;
@@ -36,8 +50,8 @@ header {
 }
 
 header h1 {
-    margin: 0;
-    font-size: 20;
+    margin: 0px;
+    font-size: 20px;
 }
 
 header .subtitle {
@@ -132,6 +146,7 @@ main {
 #medicines-table tbody tr:nth-child(even) {
     background-color: #fafafa;
 }
+
 .empty-state {
     font-size: 14px;
     color: #777;

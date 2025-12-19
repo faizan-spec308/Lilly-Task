@@ -3,6 +3,7 @@ const API_BASE_URL = "http://localhost:8000";
 document.addEventListener("DOMContentLoaded", () => {
     const statusEl = document.getElementById("status");
     const tableBody = document.querySelector("#medicines-table tbody");
+    tableBody.addEventListener("click", handleTableAction);
     const emptyStateEl = document.getElementById("empty-state");
     const form = document.getElementById("create-medicine-form");
     const formMessage = document.getElementById("form-message");
@@ -74,19 +75,87 @@ document.addEventListener("DOMContentLoaded", () => {
             const hasIssues = rawName === "Unknown name" || !hasNumericPrice;
 
             tr.innerHTML = `
-                <td>${index + 1}</td>
-                <td>${escapeHtml(rawName)}</td>
-                <td>${priceText}</td>
-                <td>${
-                    hasIssues
-                        ? '<span class="badge badge--warning">Incomplete data</span>'
-                        : ""
-                }</td>
-            `;
+  <td>${index + 1}</td>
+  <td>${escapeHtml(rawName)}</td>
+  <td>${priceText}</td>
+  <td>
+    ${
+      hasIssues
+        ? '<span class="badge badge--warning">Incomplete data</span>'
+        : ''
+    }
+  </td>
+  <td>
+    <button class="btn btn-small" data-action="update" data-name="${escapeHtml(rawName)}">
+      Update
+    </button>
+    <button class="btn btn-small btn-danger" data-action="delete" data-name="${escapeHtml(rawName)}">
+      Delete
+    </button>
+  </td>
+`;
+
 
             tableBody.appendChild(tr);
         });
     }
+    async function handleTableAction(event) {
+    const button = event.target;
+    if (!button.dataset.action) return;
+
+    const action = button.dataset.action;
+    const name = button.dataset.name;
+
+    if (!name) return;
+
+    if (action === "delete") {
+        const confirmDelete = confirm(`Delete medicine "${name}"?`);
+        if (!confirmDelete) return;
+
+        const formData = new FormData();
+        formData.append("name", name);
+
+        try {
+            const res = await fetch(`${API_BASE_URL}/delete`, {
+                method: "DELETE",
+                body: formData,
+            });
+
+            if (!res.ok) throw new Error();
+            await fetchMedicines();
+        } catch {
+            alert("Failed to delete medicine.");
+        }
+    }
+
+    if (action === "update") {
+        const newPrice = prompt(`Enter new price for "${name}"`);
+        if (newPrice === null) return;
+
+        const priceValue = Number(newPrice);
+        if (!Number.isFinite(priceValue) || priceValue <= 0) {
+            alert("Invalid price.");
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("price", priceValue);
+
+        try {
+            const res = await fetch(`${API_BASE_URL}/update`, {
+                method: "POST",
+                body: formData,
+            });
+
+            if (!res.ok) throw new Error();
+            await fetchMedicines();
+        } catch {
+            alert("Failed to update medicine.");
+        }
+    }
+}
+
 // Fetchging data
 
     async function fetchMedicines() {

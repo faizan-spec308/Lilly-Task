@@ -75,22 +75,22 @@ document.addEventListener("DOMContentLoaded", () => {
             const hasIssues = rawName === "Unknown name" || !hasNumericPrice;
 
             tr.innerHTML = `
-  <td>${index + 1}</td>
-  <td>${escapeHtml(rawName)}</td>
-  <td>${priceText}</td>
-  <td>
-    ${
-      hasIssues
-        ? '<span class="badge badge--warning">Incomplete data</span>'
-        : ''
-    }
-  </td>
-  <td>
-    <button class="btn btn-small" data-action="update" data-name="${escapeHtml(rawName)}">
-      Update
-    </button>
-    <button class="btn btn-small btn-danger" data-action="delete" data-name="${escapeHtml(rawName)}">
-      Delete
+               <td>${index + 1}</td>
+               <td>${escapeHtml(rawName)}</td>
+               <td>${priceText}</td>
+               <td>
+            ${
+            hasIssues
+            ? '<span class="badge badge--warning">Incomplete data</span>'
+            : ''
+            }
+         </td>
+         <td>
+           <button class="btn btn-small" data-action="update" data-name="${escapeHtml(rawName)}">
+           Update
+        </button>
+        <button class="btn btn-small btn-danger" data-action="delete" data-name="${escapeHtml(rawName)}">
+        Delete
     </button>
   </td>
 `;
@@ -179,6 +179,30 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+     async function fetchAveragePrice() {
+    const avgEl = document.getElementById("average-price");
+    if (!avgEl) return;
+
+    try {
+        const res = await fetch(`${API_BASE_URL}/report/average-price`);
+        if (!res.ok) throw new Error();
+
+        const data = await res.json();
+
+        if (data.average_price === null || data.count === 0) {
+            avgEl.innerHTML = "Average medicine price: <strong>N/A</strong>";
+        } else {
+            avgEl.innerHTML = `
+                Average medicine price: 
+                <strong>£${data.average_price}</strong> 
+                <span style="color:#777;">(based on ${data.count} medicines)</span>
+            `;
+        }
+    } catch {
+        avgEl.innerHTML = "Average medicine price: <strong>Error loading</strong>";
+    }
+}
+
 //  Handling form
 
     if (form) {
@@ -240,4 +264,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     fetchMedicines();
+    fetchAveragePrice();
+    
 });

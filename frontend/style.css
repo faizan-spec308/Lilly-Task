@@ -12,6 +12,12 @@ body {
     padding-top: 30px;
 }
 
+.stat{
+    margin-top: 0.5rem;
+    font-size: 0.95rem;
+    color: #333;
+}
+
 .btn-small {
     padding: 0.3rem 0.6rem;
     font-size: 0.8rem;
